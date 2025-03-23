@@ -10,7 +10,24 @@
     <h1>ابحث عن مكان العمل</h1>
     <input type="text" id="search" placeholder="أدخل اسم مكان العمل">
     <button onclick="searchWorkplace()">بحث</button>
+    
+    <!-- قسم لعرض النتائج القديمة -->
+    <div id="old-results"></div>
+
+    <!-- قسم لعرض النتائج الجديدة -->
     <div id="results"></div>
+
+    <!-- قسم لعرض تفاصيل الأقسام -->
+    <div id="department-details" style="display: none;">
+        <h2 id="department-name"></h2>
+        <ul id="department-list"></ul>
+    </div>
+
+    <!-- قسم لعرض تفاصيل الموظفين -->
+    <div id="employee-details" style="display: none;">
+        <h2 id="employee-department-name"></h2>
+        <ul id="employee-list"></ul>
+    </div>
 
     <script src="script.js"></script>
 </body>

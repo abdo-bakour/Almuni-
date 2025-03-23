@@ -3,28 +3,38 @@ body {
     text-align: center;
     background-color: #f4f4f4;
 }
+
 input {
     padding: 10px;
     width: 300px;
     margin-top: 20px;
 }
+
 button {
     padding: 10px;
     background-color: #28a745;
     color: white;
     border: none;
-}
-/* إضافة تنسيقات عامة للنتائج */
-#results {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #333;
+    cursor: pointer;
 }
 
-/* تنسيقات خاصة للقسم C5.2 */
-.c5-2-section {
-    background-color: #e3f2fd; /* لون خلفية فاتح */
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #90caf9; /* لون حدود */
+#old-results, #results, #department-details, #employee-details {
+    margin-top: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #fff;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+li:hover {
+    background-color: #f0f0f0;
 }
