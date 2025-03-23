@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Alumni </title>
+    <title>Employee Directory</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Alumni-IB</h1>
-    <input type="text" id="search" placeholder="Arbeitsstelle" >
-    <button onclick="searchWorkplace()">search</button>
+    <h1>Search for Workplace</h1>
+    <input type="text" id="search" placeholder="Enter workplace name">
+    <button onclick="searchWorkplace()">Search</button>
     
-    <!-- results 1 -->
+    <!-- Section for old results -->
     <div id="old-results"></div>
 
-    <!-- resukts 2 -->
+    <!-- Section for new results -->
     <div id="results"></div>
 
-    <!-- قسم لعرض تفاصيل الأقسام -->
+    <!-- Section for department details -->
     <div id="department-details" style="display: none;">
         <h2 id="department-name"></h2>
         <ul id="department-list"></ul>
     </div>
 
-    <!-- قسم لعرض تفاصيل الموظفين -->
+    <!-- Section for employee details -->
     <div id="employee-details" style="display: none;">
         <h2 id="employee-department-name"></h2>
         <ul id="employee-list"></ul>

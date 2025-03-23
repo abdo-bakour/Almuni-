@@ -1,11 +1,11 @@
-// الكود القديم
+// Old code
 function oldSearchWorkplace() {
     let query = document.getElementById("search").value;
     let oldResultsDiv = document.getElementById("old-results");
-    oldResultsDiv.innerHTML = "<p>نتيجة البحث القديم: " + query + "</p>";
+    oldResultsDiv.innerHTML = "<p>Old search result: " + query + "</p>";
 }
 
-// الكود الجديد
+// New code
 const workplaces = {
     "karl-olga-krankenhaus": {
         name: "Karl-Olga-Krankenhaus",
@@ -18,10 +18,10 @@ const workplaces = {
                     { name: "Sara", telefonNr: "0155555557" }
                 ]
             },
-            // يمكن إضافة أقسام أخرى هنا
+            // Add more departments here
         }
     },
-    // يمكن إضافة أماكن عمل أخرى هنا
+    // Add more workplaces here
 };
 
 function searchWorkplace() {
@@ -29,19 +29,19 @@ function searchWorkplace() {
     let resultsDiv = document.getElementById("results");
     let oldResultsDiv = document.getElementById("old-results");
 
-    // مسح النتائج القديمة والجديدة
+    // Clear old and new results
     resultsDiv.innerHTML = "";
     oldResultsDiv.innerHTML = "";
 
-    // البحث القديم
+    // Old search
     oldSearchWorkplace();
 
-    // البحث الجديد
+    // New search
     if (workplaces[query]) {
-        // عرض اسم مكان العمل كخيار قابل للتحديد
+        // Display workplace name as a clickable option
         resultsDiv.innerHTML = `<li onclick="showDepartments('${query}')">${workplaces[query].name}</li>`;
     } else {
-        resultsDiv.innerHTML = "<p>لم يتم العثور على نتائج لـ " + query + ".</p>";
+        resultsDiv.innerHTML = "<p>No results found for " + query + ".</p>";
     }
 }
 
@@ -50,17 +50,17 @@ function showDepartments(workplaceKey) {
     let departmentDetails = document.getElementById("department-details");
     let departmentList = document.getElementById("department-list");
 
-    // عرض اسم مكان العمل
+    // Display workplace name
     document.getElementById("department-name").innerText = workplace.name;
 
-    // عرض الأقسام
+    // Display departments
     departmentList.innerHTML = "";
     for (let key in workplace.departments) {
         let department = workplace.departments[key];
         departmentList.innerHTML += `<li onclick="showEmployees('${workplaceKey}', '${key}')">${department.name}</li>`;
     }
 
-    // إظهار قسم التفاصيل
+    // Show department details section
     departmentDetails.style.display = "block";
     document.getElementById("results").style.display = "none";
 }
@@ -70,16 +70,16 @@ function showEmployees(workplaceKey, departmentKey) {
     let employeeDetails = document.getElementById("employee-details");
     let employeeList = document.getElementById("employee-list");
 
-    // عرض اسم القسم
+    // Display department name
     document.getElementById("employee-department-name").innerText = department.name;
 
-    // عرض الموظفين
+    // Display employees
     employeeList.innerHTML = "";
     department.employees.forEach(employee => {
         employeeList.innerHTML += `<li>${employee.name} - ${employee.telefonNr}</li>`;
     });
 
-    // إظهار قسم تفاصيل الموظفين
+    // Show employee details section
     employeeDetails.style.display = "block";
     document.getElementById("department-details").style.display = "none";
 }
