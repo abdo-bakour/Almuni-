@@ -14,3 +14,17 @@ button {
     color: white;
     border: none;
 }
+/* إضافة تنسيقات عامة للنتائج */
+#results {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* تنسيقات خاصة للقسم C5.2 */
+.c5-2-section {
+    background-color: #e3f2fd; /* لون خلفية فاتح */
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #90caf9; /* لون حدود */
+}
