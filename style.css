@@ -1,25 +1,42 @@
+/* Same as previous CSS file, no changes needed */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.search-container {
+    margin-bottom: 20px;
 }
 
 input {
     padding: 10px;
     width: 300px;
-    margin-top: 20px;
+    margin-right: 10px;
 }
 
 button {
-    padding: 10px;
+    padding: 10px 15px;
+    margin: 0 5px;
     background-color: #28a745;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
-#old-results, #results, #department-details, #employee-details {
-    margin-top: 20px;
+button:hover {
+    background-color: #218838;
+}
+
+#results, #department-details, #employee-details {
+    margin: 20px auto;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 ul {
@@ -29,12 +46,38 @@ ul {
 
 li {
     background-color: #fff;
-    margin: 5px 0;
-    padding: 10px;
+    margin: 10px 0;
+    padding: 15px;
     border: 1px solid #ddd;
-    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-li:hover {
-    background-color: #f0f0f0;
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 8px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
