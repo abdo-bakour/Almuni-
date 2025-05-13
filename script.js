@@ -1,85 +1,177 @@
-// Old code
-function oldSearchWorkplace() {
-    let query = document.getElementById("search").value;
-    let oldResultsDiv = document.getElementById("old-results");
-    oldResultsDiv.innerHTML = "<p>Old search result: " + query + "</p>";
-}
-
-// New code
-const workplaces = {
+// Data storage
+let workplaces = JSON.parse(localStorage.getItem('workplaces')) || {
     "karl-olga-krankenhaus": {
         name: "Karl-Olga-Krankenhaus",
         departments: {
             "c5.2": {
                 name: "C5.2",
                 employees: [
-                    { name: "Abdul", telefonNr: "0155555555" },
-                    { name: "Ali", telefonNr: "0155555556" },
-                    { name: "Sara", telefonNr: "0155555557" }
+                    { name: "Abdullah", telefonNr: "0155555555" },
+                    { name: "Ali", telefonNr: "0155555556" }
                 ]
-            },
-            // Add more departments here
+            }
         }
-    },
-    // Add more workplaces here
+    }
 };
 
+// Variables to track current workplace and department
+let currentWorkplace = null;
+let currentDepartment = null;
+
+// Display functions
 function searchWorkplace() {
     let query = document.getElementById("search").value.toLowerCase();
     let resultsDiv = document.getElementById("results");
-    let oldResultsDiv = document.getElementById("old-results");
-
-    // Clear old and new results
     resultsDiv.innerHTML = "";
-    oldResultsDiv.innerHTML = "";
 
-    // Old search
-    oldSearchWorkplace();
-
-    // New search
     if (workplaces[query]) {
-        // Display workplace name as a clickable option
-        resultsDiv.innerHTML = `<li onclick="showDepartments('${query}')">${workplaces[query].name}</li>`;
+        resultsDiv.innerHTML = `
+            <div class="workplace-item" onclick="showDepartments('${query}')">
+                <span>${workplaces[query].name}</span>
+                <button onclick="event.stopPropagation(); deleteWorkplace('${query}')">Delete</button>
+            </div>
+        `;
     } else {
-        resultsDiv.innerHTML = "<p>No results found for " + query + ".</p>";
+        resultsDiv.innerHTML = "<p>No results found</p>";
     }
 }
 
 function showDepartments(workplaceKey) {
+    currentWorkplace = workplaceKey;
     let workplace = workplaces[workplaceKey];
     let departmentDetails = document.getElementById("department-details");
     let departmentList = document.getElementById("department-list");
 
-    // Display workplace name
     document.getElementById("department-name").innerText = workplace.name;
-
-    // Display departments
     departmentList.innerHTML = "";
+
     for (let key in workplace.departments) {
-        let department = workplace.departments[key];
-        departmentList.innerHTML += `<li onclick="showEmployees('${workplaceKey}', '${key}')">${department.name}</li>`;
+        departmentList.innerHTML += `
+            <li onclick="showEmployees('${workplaceKey}', '${key}')">
+                <span>${workplace.departments[key].name}</span>
+                <button onclick="event.stopPropagation(); deleteDepartment('${key}')">Delete</button>
+            </li>
+        `;
     }
 
-    // Show department details section
-    departmentDetails.style.display = "block";
     document.getElementById("results").style.display = "none";
+    departmentDetails.style.display = "block";
+    employeeDetails.style.display = "none";
 }
 
 function showEmployees(workplaceKey, departmentKey) {
+    currentDepartment = departmentKey;
     let department = workplaces[workplaceKey].departments[departmentKey];
     let employeeDetails = document.getElementById("employee-details");
     let employeeList = document.getElementById("employee-list");
 
-    // Display department name
     document.getElementById("employee-department-name").innerText = department.name;
-
-    // Display employees
     employeeList.innerHTML = "";
-    department.employees.forEach(employee => {
-        employeeList.innerHTML += `<li>${employee.name} - ${employee.telefonNr}</li>`;
+
+    department.employees.forEach((employee, index) => {
+        employeeList.innerHTML += `
+            <li>
+                <span>${employee.name} - ${employee.telefonNr}</span>
+                <button onclick="deleteEmployee(${index})">Delete</button>
+            </li>
+        `;
     });
 
-    // Show employee details section
-    employeeDetails.style.display = "block";
     document.getElementById("department-details").style.display = "none";
+    employeeDetails.style.display = "block";
 }
+
+// Add functions
+function showAddWorkplaceForm() {
+    document.getElementById("add-workplace-form").style.display = "block";
+}
+
+function showAddDepartmentForm() {
+    document.getElementById("add-department-form").style.display = "block";
+}
+
+function showAddEmployeeForm() {
+    document.getElementById("add-employee-form").style.display = "block";
+}
+
+function hideAddForms() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = "none";
+    });
+}
+
+function addWorkplace() {
+    const name = document.getElementById("new-workplace-name").value;
+    if (name && !workplaces[name.toLowerCase()]) {
+        workplaces[name.toLowerCase()] = {
+            name: name,
+            departments: {}
+        };
+        saveData();
+        hideAddForms();
+        searchWorkplace();
+    }
+}
+
+function addDepartment() {
+    const name = document.getElementById("new-department-name").value;
+    if (name && currentWorkplace) {
+        const key = name.toLowerCase().replace(/\s+/g, '-');
+        workplaces[currentWorkplace].departments[key] = {
+            name: name,
+            employees: []
+        };
+        saveData();
+        hideAddForms();
+        showDepartments(currentWorkplace);
+    }
+}
+
+function addEmployee() {
+    const name = document.getElementById("new-employee-name").value;
+    const phone = document.getElementById("new-employee-phone").value;
+    if (name && phone && currentWorkplace && currentDepartment) {
+        workplaces[currentWorkplace].departments[currentDepartment].employees.push({
+            name: name,
+            telefonNr: phone
+        });
+        saveData();
+        hideAddForms();
+        showEmployees(currentWorkplace, currentDepartment);
+    }
+}
+
+// Delete functions
+function deleteWorkplace(key) {
+    if (confirm(`Delete ${workplaces[key].name}?`)) {
+        delete workplaces[key];
+        saveData();
+        searchWorkplace();
+    }
+}
+
+function deleteDepartment(key) {
+    if (confirm("Delete this department?")) {
+        delete workplaces[currentWorkplace].departments[key];
+        saveData();
+        showDepartments(currentWorkplace);
+    }
+}
+
+function deleteEmployee(index) {
+    if (confirm("Delete this employee?")) {
+        workplaces[currentWorkplace].departments[currentDepartment].employees.splice(index, 1);
+        saveData();
+        showEmployees(currentWorkplace, currentDepartment);
+    }
+}
+
+// Save data
+function saveData() {
+    localStorage.setItem('workplaces', JSON.stringify(workplaces));
+}
+
+// Initialize page
+window.onload = function() {
+    searchWorkplace();
+};
