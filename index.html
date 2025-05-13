@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
         <header>
             <h1>دليل الموظفين</h1>
             <div class="search-container">
-                <input type="text" id="search" placeholder="ابحث عن مكان العمل" dir="rtl">
+                <input type="text" id="search" placeholder="ابحث عن مكان العمل">
                 <div class="button-group">
                     <button id="search-btn">بحث</button>
                     <button id="add-workplace-btn">إضافة مكان عمل</button>
@@ -45,7 +45,7 @@
         <div id="add-workplace-form" class="modal" style="display:none;">
             <div class="modal-content">
                 <h2>إضافة مكان عمل جديد</h2>
-                <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" dir="rtl">
+                <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل">
                 <div class="form-actions">
                     <button id="confirm-add-workplace">إضافة</button>
                     <button class="cancel-btn">إلغاء</button>
@@ -56,7 +56,7 @@
         <div id="add-department-form" class="modal" style="display:none;">
             <div class="modal-content">
                 <h2>إضافة قسم جديد</h2>
-                <input type="text" id="new-department-name" placeholder="اسم القسم" dir="rtl">
+                <input type="text" id="new-department-name" placeholder="اسم القسم">
                 <div class="form-actions">
                     <button id="confirm-add-department">إضافة</button>
                     <button class="cancel-btn">إلغاء</button>
@@ -67,8 +67,8 @@
         <div id="add-employee-form" class="modal" style="display:none;">
             <div class="modal-content">
                 <h2>إضافة موظف جديد</h2>
-                <input type="text" id="new-employee-name" placeholder="اسم الموظف" dir="rtl">
-                <input type="text" id="new-employee-phone" placeholder="رقم الهاتف" dir="rtl">
+                <input type="text" id="new-employee-name" placeholder="اسم الموظف">
+                <input type="text" id="new-employee-phone" placeholder="رقم الهاتف">
                 <div class="form-actions">
                     <button id="confirm-add-employee">إضافة</button>
                     <button class="cancel-btn">إلغاء</button>
@@ -77,9 +77,38 @@
         </div>
     </div>
 
-    <!-- مكتبات Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- تكوين Firebase SDK v9 -->
+    <script type="module">
+        // استيراد الدوال المطلوبة من Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+        // تكوين Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBk1rSF0rrV-UAv09Zls-KlZuheW6bCW3o",
+            authDomain: "alumni-ib.firebaseapp.com",
+            databaseURL: "https://alumni-ib-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "alumni-ib",
+            storageBucket: "alumni-ib.firebasestorage.app",
+            messagingSenderId: "390800579797",
+            appId: "1:390800579797:web:71e797973aa3932a4bd65c",
+            measurementId: "G-E7K0288XZM"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // جعل المتغيرات متاحة للاستخدام في script.js
+        window.firebaseDatabase = {
+            db: database,
+            ref,
+            set,
+            onValue
+        };
+    </script>
+
+    <!-- ملف JavaScript الرئيسي -->
     <script src="script.js"></script>
 </body>
 </html>
