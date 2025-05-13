@@ -199,3 +199,36 @@ function loadData() {
 window.onload = function() {
     searchWorkplace();
 };
+// تهيئة Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyB...", // استبدل بالإعدادات الخاصة بك
+  // ... بقية الإعدادات التي نسختها من Firebase
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// دالة لحفظ البيانات
+function saveData() {
+  const data = {
+    name: "Karl-Olga-Krankenhaus",
+    lastUpdated: new Date().toISOString()
+  };
+  
+  database.ref('workplaces').set(data)
+    .then(() => console.log("تم الحفظ بنجاح!"))
+    .catch(error => console.error("Error:", error));
+}
+
+// دالة لقراءة البيانات
+function loadData() {
+  database.ref('workplaces').on('value', (snapshot) => {
+    const data = snapshot.val();
+    console.log("البيانات المستلمة:", data);
+  });
+}
+
+// اختبار التشغيل
+window.onload = function() {
+  saveData(); // اختبار الحفظ
+  loadData(); // اختبار القراءة
+};
