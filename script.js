@@ -167,10 +167,34 @@ function deleteEmployee(index) {
 }
 
 // Save data
+// التهيئة (استبدل بالإعدادات الخاصة بك من Firebase)
+const firebaseConfig = {
+  apiKey: "AIzaSyA...",
+  authDomain: "your-project.firebaseapp.com",
+  databaseURL: "https://your-project.firebaseio.com",
+  projectId: "your-project",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123...",
+  appId: "1:123...:web:abc..."
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// دالة الحفظ (مثال)
 function saveData() {
-    localStorage.setItem('workplaces', JSON.stringify(workplaces));
+  firebase.database().ref('workplaces').set(workplaces)
+    .then(() => console.log("تم الحفظ في السحابة!"));
 }
 
+// دالة جلب البيانات
+function loadData() {
+  firebase.database().ref('workplaces').on('value', (snapshot) => {
+    workplaces = snapshot.val() || {};
+    console.log("تم تحميل البيانات:", workplaces);
+  });
+}
 // Initialize page
 window.onload = function() {
     searchWorkplace();
