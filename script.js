@@ -139,13 +139,17 @@ function addWorkplace() {
 
   workplaces[key] = {
     name: name,
-    departments: {},
+    departments: {}
   };
 
   saveData();
   hideAddForms();
   nameInput.value = "";
-  searchWorkplace();
+
+  currentWorkplace = key;
+  currentDepartment = null;
+
+  showDepartments(currentWorkplace);
   alert("تمت الإضافة بنجاح!");
 }
 
@@ -176,7 +180,7 @@ function addDepartment() {
 
   workplace.departments[key] = {
     name: departmentName,
-    employees: [],
+    employees: []
   };
 
   saveData();
@@ -209,7 +213,7 @@ function addEmployee() {
     workplaces[currentWorkplace].departments[currentDepartment];
   department.employees.push({
     name: name,
-    telefonNr: phone,
+    telefonNr: phone
   });
 
   saveData();
