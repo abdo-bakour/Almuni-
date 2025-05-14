@@ -140,6 +140,27 @@ button.cancel-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+.workplace-item {
+  background-color: var(--light-color);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.workplace-item:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.workplace-item button {
+  margin-right: 10px;
+}
+
 /* النماذج المنبثقة */
 .modal {
   display: none;
