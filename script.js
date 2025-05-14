@@ -1,12 +1,9 @@
-// استيراد دوال Firebase (ملاحظة: هذه الاستيرادات لن تعمل في ملف منفصل عادي بدون bundler مثل Webpack أو Vite)
-// لهذا نفترض أن التهيئة تحدث في index.html وتوفر db عبر window.firebaseDatabase
-
 // متغيرات التطبيق
 let workplaces = {};
 let currentWorkplace = null;
 let currentDepartment = null;
 
-// تحميل البيانات من Firebase Realtime Database
+// تحميل البيانات من Firebase
 function loadData() {
   const dbRef = window.firebaseDatabase.ref("workplaces");
   window.firebaseDatabase.onValue(dbRef, (snapshot) => {
@@ -15,7 +12,7 @@ function loadData() {
   });
 }
 
-// حفظ البيانات على Firebase Realtime Database
+// حفظ البيانات على Firebase
 function saveData() {
   window.firebaseDatabase
     .set(window.firebaseDatabase.ref("workplaces"), workplaces)
@@ -66,7 +63,6 @@ function searchWorkplace() {
       resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
     }
   }
-
   document.getElementById("results").style.display = "block";
   document.getElementById("department-details").style.display = "none";
   document.getElementById("employee-details").style.display = "none";
@@ -212,8 +208,7 @@ function addEmployee() {
     return;
   }
 
-  const department =
-    workplaces[currentWorkplace].departments[currentDepartment];
+  const department = workplaces[currentWorkplace].departments[currentDepartment];
   department.employees.push({
     name: name,
     telefonNr: phone
@@ -255,8 +250,7 @@ function deleteDepartment(key) {
 
 function deleteEmployee(index) {
   if (!currentWorkplace || !currentDepartment) return;
-  const employees =
-    workplaces[currentWorkplace].departments[currentDepartment].employees;
+  const employees = workplaces[currentWorkplace].departments[currentDepartment].employees;
   if (confirm(`حذف الموظف ${employees[index].name}؟`)) {
     employees.splice(index, 1);
     saveData();
@@ -274,26 +268,14 @@ function hideAddForms() {
 // التهيئة عند تحميل الصفحة
 window.onload = function () {
   document.getElementById("search").addEventListener("input", searchWorkplace);
-  document
-    .getElementById("add-workplace-btn")
-    .addEventListener("click", showAddWorkplaceForm);
-  document
-    .getElementById("confirm-add-workplace")
-    .addEventListener("click", addWorkplace);
+  document.getElementById("add-workplace-btn").addEventListener("click", showAddWorkplaceForm);
+  document.getElementById("confirm-add-workplace").addEventListener("click", addWorkplace);
 
-  document
-    .getElementById("add-department-btn")
-    .addEventListener("click", showAddDepartmentForm);
-  document
-    .getElementById("confirm-add-department")
-    .addEventListener("click", addDepartment);
+  document.getElementById("add-department-btn").addEventListener("click", showAddDepartmentForm);
+  document.getElementById("confirm-add-department").addEventListener("click", addDepartment);
 
-  document
-    .getElementById("add-employee-btn")
-    .addEventListener("click", showAddEmployeeForm);
-  document
-    .getElementById("confirm-add-employee")
-    .addEventListener("click", addEmployee);
+  document.getElementById("add-employee-btn").addEventListener("click", showAddEmployeeForm);
+  document.getElementById("confirm-add-employee").addEventListener("click", addEmployee);
 
   document.querySelectorAll(".cancel-btn").forEach((btn) => {
     btn.addEventListener("click", hideAddForms);
