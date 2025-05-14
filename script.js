@@ -1,6 +1,3 @@
-// الوصول إلى دوال Firebase من window
-const { db, ref, set, onValue } = window.firebaseDatabase;
-
 // متغيرات التطبيق
 let workplaces = {};
 let currentWorkplace = null;
@@ -8,10 +5,11 @@ let currentDepartment = null;
 
 // دالة جلب البيانات من Firebase
 function loadData() {
-    const dbRef = ref(db, 'workplaces');
+    const dbRef = window.firebaseDatabase.ref('workplaces');
     
-    onValue(dbRef, (snapshot) => {
-        workplaces = snapshot.val() || {
+    window.firebaseDatabase.onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        workplaces = data || {
             "karl-olga-krankenhaus": {
                 name: "Karl-Olga-Krankenhaus",
                 departments: {
@@ -26,14 +24,12 @@ function loadData() {
             }
         };
         updateUI();
-    }, {
-        onlyOnce: false // لمراقبة التغييرات في الوقت الحقيقي
     });
 }
 
 // دالة حفظ البيانات في Firebase
 function saveData() {
-    set(ref(db, 'workplaces'), workplaces)
+    window.firebaseDatabase.set(window.firebaseDatabase.ref('workplaces'), workplaces)
         .then(() => console.log("تم الحفظ بنجاح"))
         .catch(error => {
             console.error("خطأ في الحفظ:", error);
@@ -64,16 +60,23 @@ function searchWorkplace() {
                 </div>
             `;
         }
-    } else if (workplaces[query]) {
-        // عرض نتائج البحث
-        resultsDiv.innerHTML = `
-            <div class="workplace-item" onclick="showDepartments('${query}')">
-                <span>${workplaces[query].name}</span>
-                <button onclick="event.stopPropagation(); deleteWorkplace('${query}')">حذف</button>
-            </div>
-        `;
     } else {
-        resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
+        // عرض نتائج البحث
+        let found = false;
+        for (let key in workplaces) {
+            if (key.includes(query) || workplaces[key].name.toLowerCase().includes(query)) {
+                found = true;
+                resultsDiv.innerHTML += `
+                    <div class="workplace-item" onclick="showDepartments('${key}')">
+                        <span>${workplaces[key].name}</span>
+                        <button onclick="event.stopPropagation(); deleteWorkplace('${key}')">حذف</button>
+                    </div>
+                `;
+            }
+        }
+        if (!found) {
+            resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
+        }
     }
 }
 
@@ -152,6 +155,7 @@ function addWorkplace() {
         };
         saveData();
         hideAddForms();
+        document.getElementById("new-workplace-name").value = "";
         searchWorkplace();
     }
 }
@@ -166,6 +170,7 @@ function addDepartment() {
         };
         saveData();
         hideAddForms();
+        document.getElementById("new-department-name").value = "";
         showDepartments(currentWorkplace);
     }
 }
@@ -180,6 +185,8 @@ function addEmployee() {
         });
         saveData();
         hideAddForms();
+        document.getElementById("new-employee-name").value = "";
+        document.getElementById("new-employee-phone").value = "";
         showEmployees(currentWorkplace, currentDepartment);
     }
 }
@@ -191,6 +198,9 @@ function deleteWorkplace(key) {
         currentWorkplace = null;
         currentDepartment = null;
         saveData();
+        document.getElementById("results").style.display = "block";
+        document.getElementById("department-details").style.display = "none";
+        document.getElementById("employee-details").style.display = "none";
         searchWorkplace();
     }
 }
@@ -200,6 +210,7 @@ function deleteDepartment(key) {
         delete workplaces[currentWorkplace].departments[key];
         currentDepartment = null;
         saveData();
+        document.getElementById("employee-details").style.display = "none";
         showDepartments(currentWorkplace);
     }
 }
@@ -232,8 +243,8 @@ window.onload = function() {
 
 // اختبار الاتصال
 function testConnection() {
-    const connectedRef = ref(db, '.info/connected');
-    onValue(connectedRef, (snapshot) => {
+    const connectedRef = window.firebaseDatabase.ref('.info/connected');
+    window.firebaseDatabase.onValue(connectedRef, (snapshot) => {
         if (snapshot.val() === true) {
             console.log("متصل بـ Firebase بنجاح");
         } else {
