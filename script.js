@@ -1,19 +1,49 @@
-// متغيرات التطبيق
+// Firebase إعداد
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+// إعدادات Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBk1rSF0rrV-UAv09Zls-KlZuheW6bCW3o",
+  authDomain: "alumni-ib.firebaseapp.com",
+  databaseURL: "https://alumni-ib-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "alumni-ib",
+  storageBucket: "alumni-ib.appspot.com",
+  messagingSenderId: "390800579797",
+  appId: "1:390800579797:web:71e797973aa3932a4bd65c",
+  measurementId: "G-E7K0288XZM"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+window.firebaseDatabase = {
+  db,
+  ref: (path) => ref(db, path),
+  onValue,
+  set
+};
+
+// الكود الرئيسي لتطبيق إدارة أماكن العمل
 let workplaces = {};
 let currentWorkplace = null;
 let currentDepartment = null;
 
-// تحميل البيانات من Firebase
 function loadData() {
   const dbRef = window.firebaseDatabase.ref("workplaces");
   window.firebaseDatabase.onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
-    workplaces = data || {};
+    workplaces = snapshot.val() || {};
     updateUI();
   });
 }
 
-// حفظ البيانات على Firebase
 function saveData() {
   window.firebaseDatabase
     .set(window.firebaseDatabase.ref("workplaces"), workplaces)
@@ -24,86 +54,73 @@ function saveData() {
     });
 }
 
-// تحديث واجهة المستخدم الرئيسية (أماكن العمل)
 function updateUI() {
   searchWorkplace();
   if (currentWorkplace) showDepartments(currentWorkplace);
   if (currentDepartment) showEmployees(currentWorkplace, currentDepartment);
 }
 
-// عرض أماكن العمل والبحث عنها
 function searchWorkplace() {
   let query = document.getElementById("search").value.toLowerCase();
   let resultsDiv = document.getElementById("results");
   resultsDiv.innerHTML = "";
 
-  if (query === "") {
-    for (let key in workplaces) {
+  for (let key in workplaces) {
+    if (
+      query === "" ||
+      key.includes(query) ||
+      workplaces[key].name.toLowerCase().includes(query)
+    ) {
       resultsDiv.innerHTML += `
         <div class="workplace-item" onclick="showDepartments('${key}')">
           <span>${workplaces[key].name}</span>
           <button onclick="event.stopPropagation(); deleteWorkplace('${key}')">حذف</button>
         </div>`;
     }
-  } else {
-    let found = false;
-    for (let key in workplaces) {
-      if (
-        key.includes(query) ||
-        workplaces[key].name.toLowerCase().includes(query)
-      ) {
-        found = true;
-        resultsDiv.innerHTML += `
-          <div class="workplace-item" onclick="showDepartments('${key}')">
-            <span>${workplaces[key].name}</span>
-            <button onclick="event.stopPropagation(); deleteWorkplace('${key}')">حذف</button>
-          </div>`;
-      }
-    }
-    if (!found) {
-      resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
-    }
   }
+
+  if (resultsDiv.innerHTML === "") {
+    resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
+  }
+
   document.getElementById("results").style.display = "block";
   document.getElementById("department-details").style.display = "none";
   document.getElementById("employee-details").style.display = "none";
 }
 
-// عرض الأقسام لمكان العمل المحدد
-function showDepartments(workplaceKey) {
+window.showDepartments = function (workplaceKey) {
   currentWorkplace = workplaceKey;
   currentDepartment = null;
-  let workplace = workplaces[workplaceKey];
-  let departmentDetails = document.getElementById("department-details");
-  let departmentList = document.getElementById("department-list");
+  const workplace = workplaces[workplaceKey];
+  const departmentList = document.getElementById("department-list");
 
   document.getElementById("department-name").innerText = workplace.name;
   departmentList.innerHTML = "";
 
-  for (let key in workplace.departments) {
-    departmentList.innerHTML += `
-      <li onclick="showEmployees('${workplaceKey}', '${key}')">
-        <span>${workplace.departments[key].name}</span>
-        <button onclick="event.stopPropagation(); deleteDepartment('${key}')">حذف</button>
-      </li>`;
+  if (workplace.departments) {
+    for (let key in workplace.departments) {
+      departmentList.innerHTML += `
+        <li onclick="showEmployees('${workplaceKey}', '${key}')">
+          <span>${workplace.departments[key].name}</span>
+          <button onclick="event.stopPropagation(); deleteDepartment('${key}')">حذف</button>
+        </li>`;
+    }
   }
 
   document.getElementById("results").style.display = "none";
-  departmentDetails.style.display = "block";
+  document.getElementById("department-details").style.display = "block";
   document.getElementById("employee-details").style.display = "none";
-}
+};
 
-// عرض الموظفين لقسم محدد
-function showEmployees(workplaceKey, departmentKey) {
+window.showEmployees = function (workplaceKey, departmentKey) {
   currentDepartment = departmentKey;
-  let department = workplaces[workplaceKey].departments[departmentKey];
-  let employeeDetails = document.getElementById("employee-details");
-  let employeeList = document.getElementById("employee-list");
+  const department = workplaces[workplaceKey].departments[departmentKey];
+  const employeeList = document.getElementById("employee-list");
 
   document.getElementById("employee-department-name").innerText = department.name;
   employeeList.innerHTML = "";
 
-  department.employees.forEach((employee, index) => {
+  department.employees?.forEach((employee, index) => {
     employeeList.innerHTML += `
       <li>
         <span>${employee.name} - ${employee.telefonNr}</span>
@@ -112,10 +129,37 @@ function showEmployees(workplaceKey, departmentKey) {
   });
 
   document.getElementById("department-details").style.display = "none";
-  employeeDetails.style.display = "block";
-}
+  document.getElementById("employee-details").style.display = "block";
+};
 
-// دوال الإضافة
+window.deleteWorkplace = function (key) {
+  if (confirm(`حذف ${workplaces[key].name}؟`)) {
+    delete workplaces[key];
+    currentWorkplace = null;
+    currentDepartment = null;
+    saveData();
+    searchWorkplace();
+  }
+};
+
+window.deleteDepartment = function (key) {
+  const workplace = workplaces[currentWorkplace];
+  if (confirm(`حذف القسم ${workplace.departments[key].name}؟`)) {
+    delete workplace.departments[key];
+    currentDepartment = null;
+    saveData();
+    showDepartments(currentWorkplace);
+  }
+};
+
+window.deleteEmployee = function (index) {
+  const employees = workplaces[currentWorkplace].departments[currentDepartment].employees;
+  if (confirm(`حذف الموظف ${employees[index].name}؟`)) {
+    employees.splice(index, 1);
+    saveData();
+    showEmployees(currentWorkplace, currentDepartment);
+  }
+};
 
 function showAddWorkplaceForm() {
   document.getElementById("add-workplace-form").style.display = "flex";
@@ -124,177 +168,76 @@ function showAddWorkplaceForm() {
 function addWorkplace() {
   const nameInput = document.getElementById("new-workplace-name");
   const name = nameInput.value.trim();
-
-  if (!name) {
-    alert("الرجاء إدخال اسم مكان العمل");
-    return;
-  }
+  if (!name) return alert("الرجاء إدخال اسم مكان العمل");
 
   const key = name.toLowerCase().replace(/\s+/g, "-");
+  if (workplaces[key]) return alert("مكان العمل موجود بالفعل!");
 
-  if (workplaces[key]) {
-    alert("مكان العمل موجود بالفعل!");
-    return;
-  }
-
-  workplaces[key] = {
-    name: name,
-    departments: {}
-  };
-
+  workplaces[key] = { name, departments: {} };
   saveData();
   hideAddForms();
   nameInput.value = "";
-
   currentWorkplace = key;
-  currentDepartment = null;
-
-  showDepartments(currentWorkplace);
-  alert("تمت الإضافة بنجاح!");
+  showDepartments(key);
 }
 
 function showAddDepartmentForm() {
-  if (!currentWorkplace) {
-    alert("يرجى اختيار مكان العمل أولاً.");
-    return;
-  }
+  if (!currentWorkplace) return alert("اختر مكان العمل أولاً.");
   document.getElementById("add-department-form").style.display = "flex";
 }
 
 function addDepartment() {
-  const departmentNameInput = document.getElementById("new-department-name");
-  const departmentName = departmentNameInput.value.trim();
-
-  if (!departmentName) {
-    alert("يرجى إدخال اسم القسم");
-    return;
-  }
+  const input = document.getElementById("new-department-name");
+  const name = input.value.trim();
+  if (!name) return alert("يرجى إدخال اسم القسم");
 
   const workplace = workplaces[currentWorkplace];
-  const key = departmentName.toLowerCase().replace(/\s+/g, "-");
+  if (!workplace.departments) workplace.departments = {};
 
-  if (workplace.departments[key]) {
-    alert("القسم موجود بالفعل!");
-    return;
-  }
+  const key = name.toLowerCase().replace(/\s+/g, "-");
+  if (workplace.departments[key]) return alert("القسم موجود بالفعل!");
 
-  workplace.departments[key] = {
-    name: departmentName,
-    employees: []
-  };
-
+  workplace.departments[key] = { name, employees: [] };
   saveData();
   hideAddForms();
-  departmentNameInput.value = "";
+  input.value = "";
   showDepartments(currentWorkplace);
-  alert("تمت إضافة القسم بنجاح!");
 }
 
 function showAddEmployeeForm() {
-  if (!currentWorkplace || !currentDepartment) {
-    alert("يرجى اختيار القسم أولاً.");
-    return;
-  }
+  if (!currentDepartment) return alert("اختر قسماً أولاً.");
   document.getElementById("add-employee-form").style.display = "flex";
 }
 
 function addEmployee() {
-  const employeeNameInput = document.getElementById("new-employee-name");
-  const employeePhoneInput = document.getElementById("new-employee-phone");
-  const name = employeeNameInput.value.trim();
-  const phone = employeePhoneInput.value.trim();
+  const name = document.getElementById("new-employee-name").value.trim();
+  const phone = document.getElementById("new-employee-phone").value.trim();
+  if (!name || !phone) return alert("يرجى إدخال الاسم ورقم الهاتف");
 
-  if (!name || !phone) {
-    alert("يرجى إدخال اسم الموظف ورقم الهاتف");
-    return;
-  }
-
-  const department =
-    workplaces[currentWorkplace].departments[currentDepartment];
-  department.employees.push({
-    name: name,
-    telefonNr: phone
-  });
-
+  const dept = workplaces[currentWorkplace].departments[currentDepartment];
+  dept.employees.push({ name, telefonNr: phone });
   saveData();
   hideAddForms();
-  employeeNameInput.value = "";
-  employeePhoneInput.value = "";
+  document.getElementById("new-employee-name").value = "";
+  document.getElementById("new-employee-phone").value = "";
   showEmployees(currentWorkplace, currentDepartment);
-  alert("تمت إضافة الموظف بنجاح!");
 }
 
-// دوال الحذف
-
-function deleteWorkplace(key) {
-  if (confirm(`حذف ${workplaces[key].name}؟`)) {
-    delete workplaces[key];
-    currentWorkplace = null;
-    currentDepartment = null;
-    saveData();
-    document.getElementById("results").style.display = "block";
-    document.getElementById("department-details").style.display = "none";
-    document.getElementById("employee-details").style.display = "none";
-    searchWorkplace();
-  }
-}
-
-function deleteDepartment(key) {
-  if (!currentWorkplace) return;
-  const workplace = workplaces[currentWorkplace];
-  if (confirm(`حذف القسم ${workplace.departments[key].name}؟`)) {
-    delete workplace.departments[key];
-    currentDepartment = null;
-    saveData();
-    showDepartments(currentWorkplace);
-  }
-}
-
-function deleteEmployee(index) {
-  if (!currentWorkplace || !currentDepartment) return;
-  const employees =
-    workplaces[currentWorkplace].departments[currentDepartment].employees;
-  if (confirm(`حذف الموظف ${employees[index].name}؟`)) {
-    employees.splice(index, 1);
-    saveData();
-    showEmployees(currentWorkplace, currentDepartment);
-  }
-}
-
-// إخفاء النماذج
 function hideAddForms() {
-  document.querySelectorAll(".modal").forEach((modal) => {
-    modal.style.display = "none";
-  });
+  document.querySelectorAll(".modal").forEach((el) => (el.style.display = "none"));
 }
 
-// التهيئة عند تحميل الصفحة
 window.onload = function () {
   document.getElementById("search").addEventListener("input", searchWorkplace);
-  document
-    .getElementById("add-workplace-btn")
-    .addEventListener("click", showAddWorkplaceForm);
-  document
-    .getElementById("confirm-add-workplace")
-    .addEventListener("click", addWorkplace);
-
-  document
-    .getElementById("add-department-btn")
-    .addEventListener("click", showAddDepartmentForm);
-  document
-    .getElementById("confirm-add-department")
-    .addEventListener("click", addDepartment);
-
-  document
-    .getElementById("add-employee-btn")
-    .addEventListener("click", showAddEmployeeForm);
-  document
-    .getElementById("confirm-add-employee")
-    .addEventListener("click", addEmployee);
-
-  document.querySelectorAll(".cancel-btn").forEach((btn) => {
-    btn.addEventListener("click", hideAddForms);
-  });
+  document.getElementById("add-workplace-btn").addEventListener("click", showAddWorkplaceForm);
+  document.getElementById("confirm-add-workplace").addEventListener("click", addWorkplace);
+  document.getElementById("add-department-btn").addEventListener("click", showAddDepartmentForm);
+  document.getElementById("confirm-add-department").addEventListener("click", addDepartment);
+  document.getElementById("add-employee-btn").addEventListener("click", showAddEmployeeForm);
+  document.getElementById("confirm-add-employee").addEventListener("click", addEmployee);
+  document.querySelectorAll(".cancel-btn").forEach((btn) =>
+    btn.addEventListener("click", hideAddForms)
+  );
 
   loadData();
 };
