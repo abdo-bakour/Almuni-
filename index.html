@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>دليل الموظفين - Employee Directory</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
         <header>
             <h1>دليل الموظفين</h1>
             <div class="search-container">
-                <input type="text" id="search" placeholder="ابحث عن مكان العمل">
+                <input type="text" id="search" placeholder="ابحث عن مكان العمل" />
                 <div class="button-group">
                     <button id="add-workplace-btn">إضافة مكان عمل</button>
                 </div>
@@ -39,25 +39,25 @@
             </section>
         </main>
 
-        <!-- نماذج الإضافة -->
+        <!-- النماذج -->
         <div id="add-workplace-form" class="modal" style="display:none;">
-    <div class="modal-content">
-        <h2>إضافة مكان عمل جديد</h2>
-        <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" required>
-        <div class="form-actions">
-            <button id="confirm-add-workplace" type="button">إضافة</button>
-            <button class="cancel-btn" type="button">إلغاء</button>
+            <div class="modal-content">
+                <h2>إضافة مكان عمل جديد</h2>
+                <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" required />
+                <div class="form-actions">
+                    <button id="confirm-add-workplace" type="button">إضافة</button>
+                    <button class="cancel-btn" type="button">إلغاء</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
         <div id="add-department-form" class="modal" style="display:none;">
             <div class="modal-content">
                 <h2>إضافة قسم جديد</h2>
-                <input type="text" id="new-department-name" placeholder="اسم القسم">
+                <input type="text" id="new-department-name" placeholder="اسم القسم" />
                 <div class="form-actions">
-                    <button id="confirm-add-department">إضافة</button>
-                    <button class="cancel-btn">إلغاء</button>
+                    <button id="confirm-add-department" type="button">إضافة</button>
+                    <button class="cancel-btn" type="button">إلغاء</button>
                 </div>
             </div>
         </div>
@@ -65,17 +65,17 @@
         <div id="add-employee-form" class="modal" style="display:none;">
             <div class="modal-content">
                 <h2>إضافة موظف جديد</h2>
-                <input type="text" id="new-employee-name" placeholder="اسم الموظف">
-                <input type="text" id="new-employee-phone" placeholder="رقم الهاتف">
+                <input type="text" id="new-employee-name" placeholder="اسم الموظف" />
+                <input type="text" id="new-employee-phone" placeholder="رقم الهاتف" />
                 <div class="form-actions">
-                    <button id="confirm-add-employee">إضافة</button>
-                    <button class="cancel-btn">إلغاء</button>
+                    <button id="confirm-add-employee" type="button">إضافة</button>
+                    <button class="cancel-btn" type="button">إلغاء</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- تكوين Firebase SDK -->
+    <!-- تهيئة Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
@@ -101,7 +101,6 @@
             onValue
         };
 
-        // تحميل script.js بعد تهيئة Firebase
         const script = document.createElement('script');
         script.src = 'script.js';
         document.body.appendChild(script);
