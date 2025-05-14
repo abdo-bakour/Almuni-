@@ -1,109 +1,110 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>دليل الموظفين - Employee Directory</title>
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <title>دليل الموظفين - Alumni Directory</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>دليل الموظفين</h1>
-            <div class="search-container">
-                <input type="text" id="search" placeholder="ابحث عن مكان العمل" />
-                <div class="button-group">
-                    <button id="add-workplace-btn">إضافة مكان عمل</button>
-                </div>
-            </div>
-        </header>
 
-        <main>
-            <section id="results" class="card"></section>
-
-            <section id="department-details" class="card" style="display:none;">
-                <div class="section-header">
-                    <h2 id="department-name"></h2>
-                    <button id="add-department-btn">إضافة قسم</button>
-                </div>
-                <ul id="department-list" class="list"></ul>
-            </section>
-
-            <section id="employee-details" class="card" style="display:none;">
-                <div class="section-header">
-                    <h2 id="employee-department-name"></h2>
-                    <button id="add-employee-btn">إضافة موظف</button>
-                </div>
-                <ul id="employee-list" class="list"></ul>
-            </section>
-        </main>
-
-        <!-- النماذج -->
-        <div id="add-workplace-form" class="modal" style="display:none;">
-            <div class="modal-content">
-                <h2>إضافة مكان عمل جديد</h2>
-                <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" required />
-                <div class="form-actions">
-                    <button id="confirm-add-workplace" type="button">إضافة</button>
-                    <button class="cancel-btn" type="button">إلغاء</button>
-                </div>
-            </div>
+  <div class="container">
+    <header>
+      <h1>دليل الموظفين</h1>
+      <div class="search-container">
+        <input type="text" id="search" placeholder="ابحث عن مكان العمل" />
+        <div class="button-group">
+          <button id="add-workplace-btn">إضافة مكان عمل</button>
         </div>
+      </div>
+    </header>
 
-        <div id="add-department-form" class="modal" style="display:none;">
-            <div class="modal-content">
-                <h2>إضافة قسم جديد</h2>
-                <input type="text" id="new-department-name" placeholder="اسم القسم" />
-                <div class="form-actions">
-                    <button id="confirm-add-department" type="button">إضافة</button>
-                    <button class="cancel-btn" type="button">إلغاء</button>
-                </div>
-            </div>
-        </div>
+    <main>
+      <section id="results" class="card"></section>
 
-        <div id="add-employee-form" class="modal" style="display:none;">
-            <div class="modal-content">
-                <h2>إضافة موظف جديد</h2>
-                <input type="text" id="new-employee-name" placeholder="اسم الموظف" />
-                <input type="text" id="new-employee-phone" placeholder="رقم الهاتف" />
-                <div class="form-actions">
-                    <button id="confirm-add-employee" type="button">إضافة</button>
-                    <button class="cancel-btn" type="button">إلغاء</button>
-                </div>
-            </div>
+      <section id="department-details" class="card" style="display:none;">
+        <div class="section-header">
+          <h2 id="department-name"></h2>
+          <button id="add-department-btn">إضافة قسم</button>
         </div>
+        <ul id="department-list" class="list"></ul>
+      </section>
+
+      <section id="employee-details" class="card" style="display:none;">
+        <div class="section-header">
+          <h2 id="employee-department-name"></h2>
+          <button id="add-employee-btn">إضافة موظف</button>
+        </div>
+        <ul id="employee-list" class="list"></ul>
+      </section>
+    </main>
+
+    <!-- نماذج الإضافة -->
+    <div id="add-workplace-form" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>إضافة مكان عمل جديد</h2>
+        <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" required />
+        <div class="form-actions">
+          <button id="confirm-add-workplace" type="button">إضافة</button>
+          <button class="cancel-btn" type="button">إلغاء</button>
+        </div>
+      </div>
     </div>
 
-    <!-- تهيئة Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+    <div id="add-department-form" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>إضافة قسم جديد</h2>
+        <input type="text" id="new-department-name" placeholder="اسم القسم" />
+        <div class="form-actions">
+          <button id="confirm-add-department" type="button">إضافة</button>
+          <button class="cancel-btn" type="button">إلغاء</button>
+        </div>
+      </div>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBk1rSF0rrV-UAv09Zls-KlZuheW6bCW3o",
-            authDomain: "alumni-ib.firebaseapp.com",
-            databaseURL: "https://alumni-ib-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "alumni-ib",
-            storageBucket: "alumni-ib.appspot.com",
-            messagingSenderId: "390800579797",
-            appId: "1:390800579797:web:71e797973aa3932a4bd65c",
-            measurementId: "G-E7K0288XZM"
-        };
+    <div id="add-employee-form" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>إضافة موظف جديد</h2>
+        <input type="text" id="new-employee-name" placeholder="اسم الموظف" />
+        <input type="text" id="new-employee-phone" placeholder="رقم الهاتف" />
+        <div class="form-actions">
+          <button id="confirm-add-employee" type="button">إضافة</button>
+          <button class="cancel-btn" type="button">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
-        window.firebaseDatabase = {
-            db,
-            ref: (path) => ref(db, path),
-            set,
-            onValue
-        };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBk1rSF0rrV-UAv09Zls-KlZuheW6bCW3o",
+      authDomain: "alumni-ib.firebaseapp.com",
+      databaseURL: "https://alumni-ib-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "alumni-ib",
+      storageBucket: "alumni-ib.appspot.com",
+      messagingSenderId: "390800579797",
+      appId: "1:390800579797:web:71e797973aa3932a4bd65c",
+      measurementId: "G-E7K0288XZM"
+    };
 
-        const script = document.createElement('script');
-        script.src = 'script.js';
-        document.body.appendChild(script);
-    </script>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // تمرير مرجع قاعدة البيانات إلى السكريبت الخارجي
+    window.firebaseDatabase = {
+      db,
+      ref: (path) => ref(db, path),
+      set,
+      onValue
+    };
+
+    // تحميل السكريبت الخارجي بعد تهيئة Firebase
+    const script = document.createElement("script");
+    script.src = "script.js";
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
