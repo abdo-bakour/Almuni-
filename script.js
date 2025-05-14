@@ -51,7 +51,6 @@ function searchWorkplace() {
     resultsDiv.innerHTML = "";
 
     if (query === "") {
-        // عرض كل أماكن العمل إن لم يكن هناك بحث
         for (let key in workplaces) {
             resultsDiv.innerHTML += `
                 <div class="workplace-item" onclick="showDepartments('${key}')">
@@ -61,7 +60,6 @@ function searchWorkplace() {
             `;
         }
     } else {
-        // عرض نتائج البحث
         let found = false;
         for (let key in workplaces) {
             if (key.includes(query) || workplaces[key].name.toLowerCase().includes(query)) {
@@ -127,68 +125,43 @@ function showEmployees(workplaceKey, departmentKey) {
     employeeDetails.style.display = "block";
 }
 
-// دوال الإضافة
+// دوال الإضافة (الجزء المعدل)
 function showAddWorkplaceForm() {
     document.getElementById("add-workplace-form").style.display = "block";
 }
 
-function showAddDepartmentForm() {
-    document.getElementById("add-department-form").style.display = "block";
-}
+function addWorkplace() {
+    const nameInput = document.getElementById("new-workplace-name");
+    const name = nameInput.value.trim();
+    
+    if (!name) {
+        alert("الرجاء إدخال اسم مكان العمل");
+        return;
+    }
 
-function showAddEmployeeForm() {
-    document.getElementById("add-employee-form").style.display = "block";
+    const key = name.toLowerCase().replace(/\s+/g, '-');
+    
+    if (workplaces[key]) {
+        alert("مكان العمل موجود بالفعل!");
+        return;
+    }
+
+    workplaces[key] = {
+        name: name,
+        departments: {}
+    };
+    
+    saveData();
+    hideAddForms();
+    nameInput.value = "";
+    searchWorkplace();
+    alert("تمت الإضافة بنجاح!");
 }
 
 function hideAddForms() {
     document.querySelectorAll('.modal').forEach(modal => {
         modal.style.display = "none";
     });
-}
-
-function addWorkplace() {
-    const name = document.getElementById("new-workplace-name").value;
-    if (name && !workplaces[name.toLowerCase()]) {
-        workplaces[name.toLowerCase()] = {
-            name: name,
-            departments: {}
-        };
-        saveData();
-        hideAddForms();
-        document.getElementById("new-workplace-name").value = "";
-        searchWorkplace();
-    }
-}
-
-function addDepartment() {
-    const name = document.getElementById("new-department-name").value;
-    if (name && currentWorkplace) {
-        const key = name.toLowerCase().replace(/\s+/g, '-');
-        workplaces[currentWorkplace].departments[key] = {
-            name: name,
-            employees: []
-        };
-        saveData();
-        hideAddForms();
-        document.getElementById("new-department-name").value = "";
-        showDepartments(currentWorkplace);
-    }
-}
-
-function addEmployee() {
-    const name = document.getElementById("new-employee-name").value;
-    const phone = document.getElementById("new-employee-phone").value;
-    if (name && phone && currentWorkplace && currentDepartment) {
-        workplaces[currentWorkplace].departments[currentDepartment].employees.push({
-            name: name,
-            telefonNr: phone
-        });
-        saveData();
-        hideAddForms();
-        document.getElementById("new-employee-name").value = "";
-        document.getElementById("new-employee-phone").value = "";
-        showEmployees(currentWorkplace, currentDepartment);
-    }
 }
 
 // دوال الحذف
@@ -205,53 +178,14 @@ function deleteWorkplace(key) {
     }
 }
 
-function deleteDepartment(key) {
-    if (confirm("حذف هذا القسم؟")) {
-        delete workplaces[currentWorkplace].departments[key];
-        currentDepartment = null;
-        saveData();
-        document.getElementById("employee-details").style.display = "none";
-        showDepartments(currentWorkplace);
-    }
-}
-
-function deleteEmployee(index) {
-    if (confirm("حذف هذا الموظف؟")) {
-        workplaces[currentWorkplace].departments[currentDepartment].employees.splice(index, 1);
-        saveData();
-        showEmployees(currentWorkplace, currentDepartment);
-    }
-}
-
 // تهيئة الصفحة عند التحميل
 window.onload = function() {
-    // تهيئة الأحداث
     document.getElementById("search").addEventListener("input", searchWorkplace);
     document.getElementById("add-workplace-btn").addEventListener("click", showAddWorkplaceForm);
-    document.getElementById("add-department-btn").addEventListener("click", showAddDepartmentForm);
-    document.getElementById("add-employee-btn").addEventListener("click", showAddEmployeeForm);
     document.getElementById("confirm-add-workplace").addEventListener("click", addWorkplace);
-    document.getElementById("confirm-add-department").addEventListener("click", addDepartment);
-    document.getElementById("confirm-add-employee").addEventListener("click", addEmployee);
     document.querySelectorAll('.cancel-btn').forEach(btn => {
         btn.addEventListener('click', hideAddForms);
     });
 
-    // تحميل البيانات الأولية
     loadData();
 };
-
-// اختبار الاتصال
-function testConnection() {
-    const connectedRef = window.firebaseDatabase.ref('.info/connected');
-    window.firebaseDatabase.onValue(connectedRef, (snapshot) => {
-        if (snapshot.val() === true) {
-            console.log("متصل بـ Firebase بنجاح");
-        } else {
-            console.log("غير متصل بـ Firebase");
-        }
-    });
-}
-
-// تشغيل اختبار الاتصال
-testConnection();
