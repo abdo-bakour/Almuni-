@@ -133,6 +133,7 @@ button.cancel-btn:hover {
   justify-content: space-between;
   align-items: center;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .list li:hover {
@@ -171,6 +172,7 @@ button.cancel-btn:hover {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
