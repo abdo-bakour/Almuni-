@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل الموظفين - Employee Directory</title>
     <link rel="stylesheet" href="style.css">
-    <!-- خطوط Google للعربية -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,7 +14,6 @@
             <div class="search-container">
                 <input type="text" id="search" placeholder="ابحث عن مكان العمل">
                 <div class="button-group">
-                    <button id="search-btn">بحث</button>
                     <button id="add-workplace-btn">إضافة مكان عمل</button>
                 </div>
             </div>
@@ -77,38 +75,36 @@
         </div>
     </div>
 
-    <!-- تكوين Firebase SDK v9 -->
+    <!-- تكوين Firebase SDK -->
     <script type="module">
-        // استيراد الدوال المطلوبة من Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
-        // تكوين Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBk1rSF0rrV-UAv09Zls-KlZuheW6bCW3o",
             authDomain: "alumni-ib.firebaseapp.com",
             databaseURL: "https://alumni-ib-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "alumni-ib",
-            storageBucket: "alumni-ib.firebasestorage.app",
+            storageBucket: "alumni-ib.appspot.com",
             messagingSenderId: "390800579797",
             appId: "1:390800579797:web:71e797973aa3932a4bd65c",
             measurementId: "G-E7K0288XZM"
         };
 
-        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        const db = getDatabase(app);
 
-        // جعل المتغيرات متاحة للاستخدام في script.js
         window.firebaseDatabase = {
-            db: database,
-            ref,
+            db,
+            ref: (path) => ref(db, path),
             set,
             onValue
         };
-    </script>
 
-    <!-- ملف JavaScript الرئيسي -->
-    <script src="script.js"></script>
+        // تحميل script.js بعد تهيئة Firebase
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.body.appendChild(script);
+    </script>
 </body>
 </html>
