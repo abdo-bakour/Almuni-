@@ -15,6 +15,7 @@
       align-items: center;
       z-index: 1000;
     }
+
     .modal-content {
       background: white;
       padding: 20px;
@@ -25,7 +26,6 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <header>
       <h1>Mitarbeiterverzeichnis</h1>
@@ -57,6 +57,7 @@
       </section>
     </main>
 
+    <!-- Arbeitsplatz Formular -->
     <div id="add-workplace-form" class="modal">
       <div class="modal-content">
         <h2>Neuen Arbeitsplatz hinzufügen</h2>
@@ -68,6 +69,7 @@
       </div>
     </div>
 
+    <!-- Abteilung Formular -->
     <div id="add-department-form" class="modal">
       <div class="modal-content">
         <h2>Neue Abteilung hinzufügen</h2>
@@ -79,6 +81,7 @@
       </div>
     </div>
 
+    <!-- Mitarbeiter Formular -->
     <div id="add-employee-form" class="modal">
       <div class="modal-content">
         <h2>Neuen Mitarbeiter hinzufügen</h2>
@@ -103,14 +106,22 @@
       </div>
     </div>
   </div>
+
   <script>
     function checkSecurityAnswer() {
       const answer = document.getElementById("security-answer").value.trim();
       if (answer.toLowerCase() === "alumni") {
         document.getElementById("security-modal").style.display = "none";
+        loadMainScript();
       } else {
         alert("Falsche Antwort. Bitte erneut versuchen.");
       }
+    }
+
+    function loadMainScript() {
+      const script = document.createElement("script");
+      script.src = "script-de.js";
+      document.body.appendChild(script);
     }
   </script>
 
@@ -139,11 +150,6 @@
       set,
       onValue
     };
-
-    const script = document.createElement("script");
-    script.src = "script-de.js";
-    document.body.appendChild(script);
   </script>
-
 </body>
 </html>
