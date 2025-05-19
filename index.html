@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="de" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <title>دليل الموظفين - Alumni Directory</title>
+  <title>Mitarbeiterverzeichnis - Alumni Directory</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     .modal {
@@ -26,13 +26,26 @@
 </head>
 <body>
 
-  <div class="container">
+  <!-- Sicherheitsabfrage Modal -->
+  <div id="security-modal" class="modal" style="display: flex;">
+    <div class="modal-content">
+      <h2>Sicherheitsfrage</h2>
+      <p>Bitte geben Sie das Passwort ein, um fortzufahren:</p>
+      <input type="password" id="security-input" placeholder="Passwort" />
+      <div style="margin-top:15px;">
+        <button id="security-confirm-btn" type="button">Bestätigen</button>
+      </div>
+      <p id="security-error" style="color:red; margin-top:10px; display:none;">Falsches Passwort, bitte erneut versuchen.</p>
+    </div>
+  </div>
+
+  <div class="container" id="main-content" style="display:none;">
     <header>
-      <h1>دليل الموظفين</h1>
+      <h1>Mitarbeiterverzeichnis</h1>
       <div class="search-container">
-        <input type="text" id="search" placeholder="ابحث عن مكان العمل" />
+        <input type="text" id="search" placeholder="Arbeitsplatz suchen" />
         <div class="button-group">
-          <button id="add-workplace-btn">إضافة مكان عمل</button>
+          <button id="add-workplace-btn">Arbeitsplatz hinzufügen</button>
         </div>
       </div>
     </header>
@@ -43,7 +56,7 @@
       <section id="department-details" class="card" style="display:none;">
         <div class="section-header">
           <h2 id="department-name"></h2>
-          <button id="add-department-btn">إضافة قسم</button>
+          <button id="add-department-btn">Abteilung hinzufügen</button>
         </div>
         <ul id="department-list" class="list"></ul>
       </section>
@@ -51,43 +64,43 @@
       <section id="employee-details" class="card" style="display:none;">
         <div class="section-header">
           <h2 id="employee-department-name"></h2>
-          <button id="add-employee-btn">إضافة موظف</button>
+          <button id="add-employee-btn">Mitarbeiter hinzufügen</button>
         </div>
         <ul id="employee-list" class="list"></ul>
       </section>
     </main>
 
-    <!-- نماذج الإضافة -->
+    <!-- Formulare zum Hinzufügen -->
     <div id="add-workplace-form" class="modal">
       <div class="modal-content">
-        <h2>إضافة مكان عمل جديد</h2>
-        <input type="text" id="new-workplace-name" placeholder="اسم مكان العمل" required />
+        <h2>Neuen Arbeitsplatz hinzufügen</h2>
+        <input type="text" id="new-workplace-name" placeholder="Name des Arbeitsplatzes" required />
         <div class="form-actions">
-          <button id="confirm-add-workplace" type="button">إضافة</button>
-          <button class="cancel-btn" type="button">إلغاء</button>
+          <button id="confirm-add-workplace" type="button">Hinzufügen</button>
+          <button class="cancel-btn" type="button">Abbrechen</button>
         </div>
       </div>
     </div>
 
     <div id="add-department-form" class="modal">
       <div class="modal-content">
-        <h2>إضافة قسم جديد</h2>
-        <input type="text" id="new-department-name" placeholder="اسم القسم" />
+        <h2>Neue Abteilung hinzufügen</h2>
+        <input type="text" id="new-department-name" placeholder="Name der Abteilung" />
         <div class="form-actions">
-          <button id="confirm-add-department" type="button">إضافة</button>
-          <button class="cancel-btn" type="button">إلغاء</button>
+          <button id="confirm-add-department" type="button">Hinzufügen</button>
+          <button class="cancel-btn" type="button">Abbrechen</button>
         </div>
       </div>
     </div>
 
     <div id="add-employee-form" class="modal">
       <div class="modal-content">
-        <h2>إضافة موظف جديد</h2>
-        <input type="text" id="new-employee-name" placeholder="اسم الموظف" />
-        <input type="text" id="new-employee-phone" placeholder="رقم الهاتف" />
+        <h2>Neuen Mitarbeiter hinzufügen</h2>
+        <input type="text" id="new-employee-name" placeholder="Name des Mitarbeiters" />
+        <input type="text" id="new-employee-phone" placeholder="Telefonnummer" />
         <div class="form-actions">
-          <button id="confirm-add-employee" type="button">إضافة</button>
-          <button class="cancel-btn" type="button">إلغاء</button>
+          <button id="confirm-add-employee" type="button">Hinzufügen</button>
+          <button class="cancel-btn" type="button">Abbrechen</button>
         </div>
       </div>
     </div>
@@ -122,6 +135,32 @@
     const script = document.createElement("script");
     script.src = "script.js";
     document.body.appendChild(script);
+  </script>
+
+  <script>
+    // Sicherheitsfrage Logik
+    const securityModal = document.getElementById('security-modal');
+    const mainContent = document.getElementById('main-content');
+    const securityInput = document.getElementById('security-input');
+    const securityConfirmBtn = document.getElementById('security-confirm-btn');
+    const securityError = document.getElementById('security-error');
+
+    securityConfirmBtn.addEventListener('click', () => {
+      const val = securityInput.value.trim();
+      if (val === "Alumni") {
+        securityModal.style.display = 'none';
+        mainContent.style.display = 'block';
+        securityError.style.display = 'none';
+      } else {
+        securityError.style.display = 'block';
+      }
+    });
+
+    securityInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        securityConfirmBtn.click();
+      }
+    });
   </script>
 
 </body>
