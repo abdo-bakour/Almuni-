@@ -112,4 +112,125 @@ button.cancel-btn:hover {
   align-items: center;
   margin-bottom: 20px;
   border-bottom: 1px solid #eee;
-  padding-bottom: 
+  padding-bottom: 15px;
+}
+
+.section-header h2 {
+  color: var(--dark-color);
+  font-size: 1.5rem;
+}
+
+.list {
+  list-style: none;
+}
+
+.list li {
+  background-color: #e0f7fa; /* لون أزرق سماوي فاتح */
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.list li:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.workplace-item {
+  background-color: #e0f7fa; /* لون أزرق سماوي فاتح */
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.workplace-item:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.workplace-item button {
+  margin-right: 10px;
+}
+
+/* النماذج المنبثقة */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--light-color);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: var(--dark-color);
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* تأثيرات الحركة */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card, .modal-content {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* التجاوب مع الأجهزة */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  button {
+    width: 100%;
+  }
+}
