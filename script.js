@@ -46,13 +46,13 @@ function searchWorkplace() {
       resultsDiv.innerHTML += `
         <div class="workplace-item" onclick="showDepartments('${key}')">
           <span>${workplace.name}</span>
-          <button onclick="event.stopPropagation(); deleteWorkplace('${key}')">حذف</button>
+          <button onclick="event.stopPropagation(); deleteWorkplace('${key}')">Löschen</button>
         </div>`;
     }
   });
 
   if (resultsDiv.innerHTML === "") {
-    resultsDiv.innerHTML = "<p>لا توجد نتائج</p>";
+    resultsDiv.innerHTML = "<p>Keine Ergebnisse gefunden</p>";
   }
 
   toggleView("results");
@@ -75,7 +75,7 @@ function showDepartments(workplaceKey) {
     departmentList.innerHTML += `
       <li onclick="showEmployees('${workplaceKey}', '${key}')">
         <span>${department.name}</span>
-        <button onclick="event.stopPropagation(); deleteDepartment('${key}')">حذف</button>
+        <button onclick="event.stopPropagation(); deleteDepartment('${key}')">Löschen</button>
       </li>`;
   });
 
@@ -96,7 +96,7 @@ function showEmployees(workplaceKey, departmentKey) {
     employeeList.innerHTML += `
       <li>
         <span>${employee.name} - ${employee.telefonNr}</span>
-        <button onclick="deleteEmployee(${index})">حذف</button>
+        <button onclick="deleteEmployee(${index})">Löschen</button>
       </li>`;
   });
 
@@ -109,12 +109,12 @@ function showAddWorkplaceForm() {
 }
 
 function showAddDepartmentForm() {
-  if (!currentWorkplace) return alert("يرجى اختيار مكان العمل أولاً.");
+  if (!currentWorkplace) return alert("Bitte zuerst einen Arbeitsplatz auswählen.");
   document.getElementById("add-department-form").style.display = "flex";
 }
 
 function showAddEmployeeForm() {
-  if (!currentWorkplace || !currentDepartment) return alert("يرجى اختيار القسم أولاً.");
+  if (!currentWorkplace || !currentDepartment) return alert("Bitte zuerst eine Abteilung auswählen.");
   document.getElementById("add-employee-form").style.display = "flex";
 }
 
@@ -123,11 +123,11 @@ function addWorkplace() {
   const nameInput = document.getElementById("new-workplace-name");
   const name = nameInput.value.trim();
 
-  if (!name) return alert("الرجاء إدخال اسم مكان العمل");
+  if (!name) return alert("Bitte geben Sie den Namen des Arbeitsplatzes ein.");
 
   const key = name.toLowerCase().replace(/\s+/g, "-");
 
-  if (workplaces[key]) return alert("مكان العمل موجود بالفعل!");
+  if (workplaces[key]) return alert("Arbeitsplatz existiert bereits!");
 
   workplaces[key] = { name, departments: {} };
 
@@ -137,19 +137,19 @@ function addWorkplace() {
 
   currentWorkplace = key;
   showDepartments(key);
-  alert("تمت الإضافة بنجاح!");
+  alert("Erfolgreich hinzugefügt!");
 }
 
 function addDepartment() {
   const nameInput = document.getElementById("new-department-name");
   const name = nameInput.value.trim();
 
-  if (!name) return alert("يرجى إدخال اسم القسم");
+  if (!name) return alert("Bitte geben Sie den Namen der Abteilung ein.");
 
   const workplace = workplaces[currentWorkplace];
   const key = name.toLowerCase().replace(/\s+/g, "-");
 
-  if (workplace.departments[key]) return alert("القسم موجود بالفعل!");
+  if (workplace.departments[key]) return alert("Abteilung existiert bereits!");
 
   workplace.departments[key] = { name, employees: [] };
 
@@ -157,7 +157,7 @@ function addDepartment() {
   nameInput.value = "";
   hideAddForms();
   showDepartments(currentWorkplace);
-  alert("تمت إضافة القسم بنجاح!");
+  alert("Abteilung erfolgreich hinzugefügt!");
 }
 
 function addEmployee() {
@@ -167,7 +167,7 @@ function addEmployee() {
   const name = nameInput.value.trim();
   const phone = phoneInput.value.trim();
 
-  if (!name || !phone) return alert("يرجى إدخال اسم الموظف ورقم الهاتف");
+  if (!name || !phone) return alert("Bitte geben Sie Name und Telefonnummer des Mitarbeiters ein.");
 
   const department = workplaces[currentWorkplace].departments[currentDepartment];
   department.employees ||= [];
@@ -179,12 +179,12 @@ function addEmployee() {
   phoneInput.value = "";
   hideAddForms();
   showEmployees(currentWorkplace, currentDepartment);
-  alert("تمت إضافة الموظف بنجاح!");
+  alert("Mitarbeiter erfolgreich hinzugefügt!");
 }
 
 // حذف البيانات
 function deleteWorkplace(key) {
-  if (!confirm(`حذف ${workplaces[key].name}؟`)) return;
+  if (!confirm(`Arbeitsplatz ${workplaces[key].name} löschen?`)) return;
 
   delete workplaces[key];
   currentWorkplace = null;
@@ -199,7 +199,7 @@ function deleteDepartment(key) {
   if (!currentWorkplace) return;
 
   const department = workplaces[currentWorkplace].departments[key];
-  if (!confirm(`حذف القسم ${department.name}؟`)) return;
+  if (!confirm(`Abteilung ${department.name} löschen?`)) return;
 
   delete workplaces[currentWorkplace].departments[key];
   currentDepartment = null;
@@ -212,7 +212,7 @@ function deleteEmployee(index) {
   const employees = workplaces[currentWorkplace]?.departments[currentDepartment]?.employees;
   if (!employees) return;
 
-  if (!confirm(`حذف الموظف ${employees[index].name}؟`)) return;
+  if (!confirm(`Mitarbeiter ${employees[index].name} löschen?`)) return;
 
   employees.splice(index, 1);
   saveData();
